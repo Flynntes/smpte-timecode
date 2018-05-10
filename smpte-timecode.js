@@ -156,8 +156,12 @@
     Timecode.prototype.add = function(t,negative) {
         if (typeof t == 'number') {
             var newFrameCount = this.frameCount + Math.floor(t) * (negative?-1:1);
-            if (newFrameCount<0) throw new Error("Negative timecodes not supported");
-            this.frameCount = newFrameCount;
+            // Return a 0 if we try to go into the negatives
+            if (newFrameCount < 0) {
+                this.frameCount = 0;
+            } else {
+                this.frameCount = newFrameCount;
+            }
         } 
         else {
             if (!(t instanceof Timecode)) t = new Timecode(t);
